@@ -311,6 +311,9 @@ c1.on('disconnect', () => {
         c2.start();
       }, 2000);
     } else {
+      /*setTimeout(() => {
+        c1.start();
+      }, 2000);*/
       c2.disconnect();
     }
 });
@@ -323,6 +326,9 @@ c2.on('disconnect', () => {
         c2.start();
       }, 2000);
     } else {
+      /*setTimeout(() => {
+        c2.start();
+      }, 2000);*/
       c1.disconnect();
     }
 });
