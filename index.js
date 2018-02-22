@@ -243,15 +243,13 @@ class Omegle {
 let c1 = new Omegle();
 let c2 = new Omegle();
 
+
 c1.on('message', (text) => {
-    text = `${text} batman!`;
     c2.sendMessage(text);
     console.log(`${ '[Person 1]'.red} ${text}`);
 });
 
 c2.on('message', (text) => {
-    text = `${text} batman!`;
-
     c1.sendMessage(text);
     console.log(`${ '[Person 2]'.green} ${text}`);
 });
