@@ -21,7 +21,7 @@ class Omegle {
 
     constructor() {
         this.listeners = [];
-        this.isConnected = true;
+        this.isConnected = false;
         this.queueMessages = [];
         this.hasPartner = false;
         this.eventTries = 0;
@@ -29,13 +29,14 @@ class Omegle {
 
     getServer() {
         if (servers.length) {
-            this.server = servers[Math.round(Math.random() * servers.length)];
+            this.server = servers[Math.round(Math.random() * servers.length - 1)] + '.omegle.com';
         } else {
             this.server = 'front1.omegle.com';
         }
     }
 
     start() {
+        if (this.isConnected) { console.log ("Not starting again, already connected!"); return; }
         this.queueMessages = [];
         this.eventTries = 0;
         this.getServer();
@@ -213,8 +214,10 @@ class Omegle {
     }
 
     disconnected() {
+        if (this.isConnected) {
         this.isConnected = false;
         this.message('disconnect', true);
+    }
     }
 
     on(type, cb) {
