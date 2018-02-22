@@ -6,7 +6,7 @@ const colors = require('colors');
 let servers = [];
 
 function getServers() {
-    request({uri: 'http://omegle.com/status', json: true}).then((status) => {
+    request({uri: 'https://omegle.com/status', json: true}).then((status) => {
         servers = status.servers;
     });
 }
@@ -21,7 +21,7 @@ class Omegle {
 
     constructor() {
         this.listeners = [];
-        this.isConnected = true;
+        this.isConnected = false;
         this.queueMessages = [];
         this.hasPartner = false;
         this.eventTries = 0;
@@ -29,18 +29,19 @@ class Omegle {
 
     getServer() {
         if (servers.length) {
-            this.server = servers[Math.round(Math.random() * servers.length)];
+            this.server = servers[Math.round(Math.random() * servers.length - 1)] + '.omegle.com';
         } else {
             this.server = 'front1.omegle.com';
         }
     }
 
     start() {
+        if (this.isConnected) { console.log ("Not starting again, already connected!"); return; }
         this.queueMessages = [];
         this.eventTries = 0;
         this.getServer();
 
-        request(`http://${this.server}/start?firstevents=1&lang=nl`, {
+        request(`https://${this.server}/start?firstevents=1&lang=de`, {
             method: 'POST',
             headers: {
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
@@ -183,7 +184,7 @@ class Omegle {
             this.queueMessages.push(text);
         }
 
-        request(`http://${this.server}/send`, {
+        request(`https://${this.server}/send`, {
             method: 'POST',
             body: `id=${encodeURIComponent(this.clientID)}&msg=${encodeURIComponent(txt)}`,
             headers: {
@@ -199,7 +200,7 @@ class Omegle {
 
     sendTyping() {
 
-        request(`http://${this.server}/typing`, {
+        request(`https://${this.server}/typing`, {
             method: 'POST',
             body: `id=${encodeURIComponent(this.clientID)}`,
             headers: {
@@ -213,8 +214,10 @@ class Omegle {
     }
 
     disconnected() {
+        if (this.isConnected) {
         this.isConnected = false;
         this.message('disconnect', true);
+    }
     }
 
     on(type, cb) {
@@ -243,15 +246,13 @@ class Omegle {
 let c1 = new Omegle();
 let c2 = new Omegle();
 
+
 c1.on('message', (text) => {
-    text = `${text} batman!`;
     c2.sendMessage(text);
     console.log(`${ '[Person 1]'.red} ${text}`);
 });
 
 c2.on('message', (text) => {
-    text = `${text} batman!`;
-
     c1.sendMessage(text);
     console.log(`${ '[Person 2]'.green} ${text}`);
 });
