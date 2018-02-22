@@ -54,6 +54,7 @@ class Omegle {
                 this.clientID = response.clientID;
                 this.isConnected = true;
                 this.getEvents();
+                this.hasreplaced = false;
             } else {
                 this.message('serverDown', this.server);
             }
@@ -165,6 +166,8 @@ class Omegle {
     }
 
     receiveMessage(text) {
+        text = `${text}`;
+        if (!this.hasreplaced && text.replace("M","W").replace("m","w") != text) { text = text.replace("M","W").replace("m","w"); this.hasreplaced = true; console.log("REPLACED!", text); }
         this.message('message', text);
     }
 
