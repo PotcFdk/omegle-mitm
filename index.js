@@ -6,7 +6,7 @@ const colors = require('colors');
 let servers = [];
 
 function getServers() {
-    request({uri: 'http://omegle.com/status', json: true}).then((status) => {
+    request({uri: 'https://omegle.com/status', json: true}).then((status) => {
         servers = status.servers;
     });
 }
@@ -40,7 +40,7 @@ class Omegle {
         this.eventTries = 0;
         this.getServer();
 
-        request(`http://${this.server}/start?firstevents=1&lang=nl`, {
+        request(`https://${this.server}/start?firstevents=1&lang=de`, {
             method: 'POST',
             headers: {
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
@@ -183,7 +183,7 @@ class Omegle {
             this.queueMessages.push(text);
         }
 
-        request(`http://${this.server}/send`, {
+        request(`https://${this.server}/send`, {
             method: 'POST',
             body: `id=${encodeURIComponent(this.clientID)}&msg=${encodeURIComponent(txt)}`,
             headers: {
@@ -199,7 +199,7 @@ class Omegle {
 
     sendTyping() {
 
-        request(`http://${this.server}/typing`, {
+        request(`https://${this.server}/typing`, {
             method: 'POST',
             body: `id=${encodeURIComponent(this.clientID)}`,
             headers: {
